@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div class="page-user-chat">
+    <van-nav-bar left-arrow @click-left="$router.back()" title="登录"></van-nav-bar>
+  </div>
 </template>
 
 <script>
@@ -8,5 +10,4 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-</style>
+<style scoped lang='less'></style>
