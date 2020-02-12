@@ -4,6 +4,7 @@
     <van-nav-bar fixed title="黑马头条" right-text="搜索" @click-right="$router.push('/search')" />
     <!-- 中间区域 -->
     <div class="my-wrapper">
+        <!-- 占位符 -->
       <router-view></router-view>
     </div>
     <!-- 标签栏 -->

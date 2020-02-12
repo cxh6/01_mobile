@@ -8,6 +8,8 @@ import Vant from 'vant'
 import 'vant/lib/index.css'
 // 导入amfe-flexible
 import 'amfe-flexible/index.min.js'
+// 导入全局css样式
+import '@/assets/css/global.less'
 // 注册vant
 Vue.use(Vant)
 Vue.config.productionTip = false
