@@ -10,6 +10,8 @@ import 'vant/lib/index.css'
 import 'amfe-flexible/index.min.js'
 // 导入全局css样式
 import '@/assets/css/global.less'
+// 导入验证相关模块
+import '@/utils/validate.js'
 // 注册vant
 Vue.use(Vant)
 Vue.config.productionTip = false
