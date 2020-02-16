@@ -19,8 +19,8 @@
                 </van-grid-item>
               </van-grid>
               <p>
-                <!-- 右侧小叉号 -->
-                <van-icon name="close" style="float:right" @click="displayDialog()" />
+                <!-- 右侧小叉号,传递当前点击的文章id -->
+                <van-icon name="close" style="float:right" @click="displayDialog(item.art_id.toString())" />
                 <span>作者:{{item.aut_name}}</span>
                 &nbsp;
                 <span>评论 :{{item.comm_count}}</span>
@@ -35,7 +35,7 @@
       </van-list>
     </van-pull-refresh>
     <!-- 更多操作组件位置(举报、不感兴趣弹出框) -->
-    <more-action v-model="showDialog"></more-action>
+    <more-action v-model="showDialog" :articleID='nowArticleID' @dislikeSuccess="handleDislikeSuccess"></more-action>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ export default {
   },
   data () {
     return {
+      nowArticleID: '', // 不感兴趣文章的id
       showDialog: false, // 控制子组件弹出框不显示
       ts: Date.now(), // 时间戳
       articleList: [], // 文章列表
@@ -73,9 +74,15 @@ export default {
     this.getArticleList() // 文章列表
   },
   methods: {
+    // 文章不感兴趣删除
+    handleDislikeSuccess () {
+      const index = this.articleList.findIndex(item => item.art_id.toString() === this.nowArticleID)
+      this.articleList.splice(index, 1)
+    },
     // 展示更多操作的弹框
-    displayDialog () {
+    displayDialog (artID) {
       this.showDialog = true // 显示弹出框
+      this.nowArticleID = artID
     },
     // 文章列表
     async getArticleList () {
