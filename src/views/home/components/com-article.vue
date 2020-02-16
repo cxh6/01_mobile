@@ -1,7 +1,12 @@
 <template>
   <div class="scroll-wrapper">
     <!-- 下拉刷新 -->
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh
+      v-model="isLoading"
+      @refresh="onRefresh"
+      :success-text="downSuccessText"
+      :success-duration="1000"
+    >
       <!-- 瀑布流效果 -->
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <!-- 超大整型数字 -->
@@ -20,7 +25,11 @@
               </van-grid>
               <p>
                 <!-- 右侧小叉号,传递当前点击的文章id -->
-                <van-icon name="close" style="float:right" @click="displayDialog(item.art_id.toString())" />
+                <van-icon
+                  name="close"
+                  style="float:right"
+                  @click="displayDialog(item.art_id.toString())"
+                />
                 <span>作者:{{item.aut_name}}</span>
                 &nbsp;
                 <span>评论 :{{item.comm_count}}</span>
@@ -35,7 +44,11 @@
       </van-list>
     </van-pull-refresh>
     <!-- 更多操作组件位置(举报、不感兴趣弹出框) -->
-    <more-action v-model="showDialog" :articleID='nowArticleID' @dislikeSuccess="handleDislikeSuccess"></more-action>
+    <more-action
+      v-model="showDialog"
+      :articleID="nowArticleID"
+      @dislikeSuccess="handleDislikeSuccess"
+    ></more-action>
   </div>
 </template>
 
@@ -58,6 +71,8 @@ export default {
   },
   data () {
     return {
+      // 下拉动作完成的文字提示
+      downSuccessText: '', // 文章更新成功 / 文章已经是最新的
       nowArticleID: '', // 不感兴趣文章的id
       showDialog: false, // 控制子组件弹出框不显示
       ts: Date.now(), // 时间戳
@@ -76,7 +91,9 @@ export default {
   methods: {
     // 文章不感兴趣删除
     handleDislikeSuccess () {
-      const index = this.articleList.findIndex(item => item.art_id.toString() === this.nowArticleID)
+      const index = this.articleList.findIndex(
+        item => item.art_id.toString() === this.nowArticleID
+      )
       this.articleList.splice(index, 1)
     },
     // 展示更多操作的弹框
@@ -95,12 +112,23 @@ export default {
       return res
     },
     // 下拉刷新
-    onRefresh () {
-      setTimeout(() => {
-        this.onLoad() // 获取数据一次
-        this.isLoading = false // 暂停拉取
-        this.$toast('刷新成功')
-      }, 1000)
+    async onRefresh () {
+      // 应用延迟器
+      await this.$sleep(800)
+      // 获得文章列表数据
+      const articles = await this.getArticleList()
+      // 判断是否有获得新的文章
+      if (articles.results.length > 0) {
+        // 将刷新获得的文章追加到articleList前面
+        this.articleList.unshift(...articles.results)
+        // 更新时间戳
+        this.ts = articles.pre_timestamp
+      } else {
+        // 没有最新的文章，页面给出提示即可
+        this.downSuccessText = '文章已经是最新的了'
+      }
+      // 不管有无最新数据，加载动画都要消失
+      this.isLoading = false
     },
     // 瀑布流效果
     async onLoad () {
