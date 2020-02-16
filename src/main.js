@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 // 导入Vant
-import Vant from 'vant'
+import Vant, { Lazyload } from 'vant'
 // 导入vant样式
 import 'vant/lib/index.css'
 // 导入amfe-flexible
@@ -12,6 +12,8 @@ import 'amfe-flexible/index.min.js'
 import '@/assets/css/global.less'
 // 导入验证相关模块
 import '@/utils/validate.js'
+// 注册图片懒加载
+Vue.use(Lazyload)
 // 注册vant
 Vue.use(Vant)
 Vue.config.productionTip = false

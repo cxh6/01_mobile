@@ -5,7 +5,30 @@
       <!-- 瀑布流效果 -->
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
         <!-- 超大整型数字 -->
-        <van-cell v-for="item in articleList" :key="item.art_id.toString()" :title="item.title" />
+        <!-- <van-cell v-for="item in articleList" :key="item.art_id.toString()" :title="item.title" /> -->
+        <!-- 单元格 -->
+        <van-cell-group>
+          <van-cell v-for="item in articleList" :key="item.art_id.toString()" title="item.title">
+            <!-- 使用 title 插槽来自定义标题 -->
+            <template slot="label">
+              <!-- 宫格 -->
+              <van-grid :border="false" v-if="item.cover.type>0" :column-num="item.cover.type">
+                <van-grid-item v-for="(item2,k2) in item.cover.images" :key="k2">
+                    <!-- 图片懒加载 -->
+                  <van-image lazy-load width="90" height="90" :src="item2" />
+                </van-grid-item>
+              </van-grid>
+              <p>
+                <span>作者:{{item.aut_name}}</span>
+                &nbsp;
+                <span>评论 :{{item.comm_count}}</span>
+                &nbsp;
+                <span>时间:{{item.pubdate}}</span>
+                &nbsp;
+              </p>
+            </template>
+          </van-cell>
+        </van-cell-group>
       </van-list>
     </van-pull-refresh>
   </div>
