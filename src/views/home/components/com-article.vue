@@ -14,11 +14,13 @@
               <!-- 宫格 -->
               <van-grid :border="false" v-if="item.cover.type>0" :column-num="item.cover.type">
                 <van-grid-item v-for="(item2,k2) in item.cover.images" :key="k2">
-                    <!-- 图片懒加载 -->
+                  <!-- 图片懒加载 -->
                   <van-image lazy-load width="90" height="90" :src="item2" />
                 </van-grid-item>
               </van-grid>
               <p>
+                <!-- 右侧小叉号 -->
+                <van-icon name="close" style="float:right" @click="displayDialog()" />
                 <span>作者:{{item.aut_name}}</span>
                 &nbsp;
                 <span>评论 :{{item.comm_count}}</span>
@@ -32,14 +34,21 @@
         </van-cell-group>
       </van-list>
     </van-pull-refresh>
+    <!-- 更多操作组件位置(举报、不感兴趣弹出框) -->
+    <more-action v-model="showDialog"></more-action>
   </div>
 </template>
 
 <script>
+// 导入组件
+import MoreAction from './com-moreaction.vue'
 // 导入api
 import { apilArticleList } from '@/api/article'
 export default {
   name: 'com-article',
+  components: {
+    MoreAction
+  },
   props: {
     // 接收父组件传递过来的频道id数据
     channelID: {
@@ -49,6 +58,7 @@ export default {
   },
   data () {
     return {
+      showDialog: false, // 控制子组件弹出框不显示
       ts: Date.now(), // 时间戳
       articleList: [], // 文章列表
       // 下拉刷新相关成员
@@ -63,6 +73,10 @@ export default {
     this.getArticleList() // 文章列表
   },
   methods: {
+    // 展示更多操作的弹框
+    displayDialog () {
+      this.showDialog = true // 显示弹出框
+    },
     // 文章列表
     async getArticleList () {
       const res = await apilArticleList({
