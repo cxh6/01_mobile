@@ -23,7 +23,8 @@
                 &nbsp;
                 <span>评论 :{{item.comm_count}}</span>
                 &nbsp;
-                <span>时间:{{item.pubdate}}</span>
+                <!-- 使用过滤器 -->
+                <span>时间:{{item.pubdate|formatTime}}</span>
                 &nbsp;
               </p>
             </template>

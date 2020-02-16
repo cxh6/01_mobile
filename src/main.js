@@ -12,6 +12,12 @@ import 'amfe-flexible/index.min.js'
 import '@/assets/css/global.less'
 // 导入验证相关模块
 import '@/utils/validate.js'
+// 导入过滤器
+import * as filters from '@/utils/filters.js'
+// 注册过滤器
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 // 注册图片懒加载
 Vue.use(Lazyload)
 // 注册vant
