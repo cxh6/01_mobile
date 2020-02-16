@@ -3,7 +3,8 @@
     <van-tabs v-model="activeChannelIndex">
       <van-tab v-for="item in channelList" :key="item.id" :title="item.name">
         <!-- 使用组件 -->
-        <com-article></com-article>
+        <!-- :channelID='item.id'传递选中频道id -->
+        <com-article :channelID='item.id'></com-article>
       </van-tab>
     </van-tabs>
   </div>

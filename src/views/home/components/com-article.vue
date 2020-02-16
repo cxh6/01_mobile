@@ -4,17 +4,28 @@
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <!-- 瀑布流效果 -->
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="item in list" :key="item" :title="item" />
+        <van-cell v-for="item in articleList" :key="item.aut_id" :title="item.title" />
       </van-list>
     </van-pull-refresh>
   </div>
 </template>
 
 <script>
+// 导入api
+import { apilArticleList } from '@/api/article'
 export default {
   name: 'com-article',
+  props: {
+    // 接收父组件传递过来的频道id数据
+    channelID: {
+      typr: Number,
+      required: true
+    }
+  },
   data () {
     return {
+      ts: Date.now(), // 时间戳
+      articleList: [], // 文章列表
       // 下拉刷新相关成员
       isLoading: false,
       // 瀑布流相关成员
@@ -23,7 +34,19 @@ export default {
       finished: false
     }
   },
+  created () {
+    this.getArticleList() // 文章列表
+  },
   methods: {
+    // 文章列表
+    async getArticleList () {
+      const res = await apilArticleList({
+        channel_id: this.channelID,
+        timestamp: this.ts
+      })
+      // console.log(res)
+      this.articleList = res.results
+    },
     // 下拉刷新
     onRefresh () {
       setTimeout(() => {
