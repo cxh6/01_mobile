@@ -15,7 +15,14 @@ import '@/utils/validate.js'
 // 注册vant
 Vue.use(Vant)
 Vue.config.productionTip = false
-
+// 延迟器
+Vue.prototype.$sleep = time => {
+  return new Promise((resolve) => {
+    window.setTimeout(() => {
+      resolve()
+    }, time)
+  })
+}
 new Vue({
   router,
   store,

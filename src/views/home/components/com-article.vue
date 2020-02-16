@@ -4,7 +4,8 @@
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
       <!-- 瀑布流效果 -->
       <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-        <van-cell v-for="item in articleList" :key="item.aut_id" :title="item.title" />
+        <!-- 超大整型数字 -->
+        <van-cell v-for="item in articleList" :key="item.art_id.toString()" :title="item.title" />
       </van-list>
     </van-pull-refresh>
   </div>
@@ -44,8 +45,9 @@ export default {
         channel_id: this.channelID,
         timestamp: this.ts
       })
-      // console.log(res)
-      this.articleList = res.results
+      //   console.log(res)
+      //   this.articleList = res.results
+      return res
     },
     // 下拉刷新
     onRefresh () {
@@ -56,22 +58,21 @@ export default {
       }, 1000)
     },
     // 瀑布流效果
-    onLoad () {
-      // 异步更新数据
-      // setTimeout 仅做示例，真实场景中一般为 ajax 请求
-      setTimeout(() => {
-        for (let i = 0; i < 10; i++) {
-          this.list.push(this.list.length + 1)
-        }
-
-        // 加载状态结束
-        this.loading = false
-
-        // 数据全部加载完成
-        if (this.list.length >= 40) {
-          this.finished = true
-        }
-      }, 1000)
+    async onLoad () {
+      // 应用延迟器
+      await this.$sleep(800)
+      const articles = await this.getArticleList()
+      // console.log(articles)
+      if (articles.results.length > 0) {
+        // 追加
+        this.articleList.push(...articles.results)
+        // 更新时间戳
+        this.ts = articles.pre_timestamp
+      } else {
+        this.finished = true
+      }
+      // 加载状态结束
+      this.loading = false
     }
   }
 }
